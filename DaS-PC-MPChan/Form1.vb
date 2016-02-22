@@ -35,7 +35,7 @@ Public Class Form1
     Public Function TryAttachToProcess(ByVal windowCaption As String) As Boolean
         Dim _allProcesses() As Process = Process.GetProcesses
         For Each pp As Process In _allProcesses
-            If pp.MainWindowTitle.ToLower.Equals(windowCaption.ToLower) Then
+            If pp.MainWindowTitle.ToLower.Equals(windowCaption.ToLower) Or pp.ProcessName = "DARKSOULS" Then
                 'found it! proceed.
                 Return TryAttachToProcess(pp)
             End If
@@ -186,6 +186,10 @@ Public Class Form1
         tmpptr = ReadUInt32(&H137E204 + dbgboost)
         nmbMPChannel.Value = ReadBytes(tmpptr + &HB69, 1)(0)
 
+        'If chkDebugDrawing.Checked And Not debug Then
+        'For()
+        'End If
+
     End Sub
     Private Shared Sub hotkeyTimer_Tick() Handles hotkeyTimer.Tick
         Dim ctrlkey As Boolean
@@ -214,5 +218,9 @@ Public Class Form1
     Private Sub btnReconnect_Click(sender As Object, e As EventArgs) Handles btnReconnect.Click
         DetachFromProcess()
         TryAttachToProcess("DARK SOULS")
+    End Sub
+
+    Private Sub chkDebugDrawing_CheckedChanged_1(sender As Object, e As EventArgs) Handles chkDebugDrawing.CheckedChanged
+
     End Sub
 End Class

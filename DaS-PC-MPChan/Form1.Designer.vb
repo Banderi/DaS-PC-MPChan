@@ -35,16 +35,18 @@ Partial Class Form1
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.LightGray
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(78, 22)
+        Me.Label6.Location = New System.Drawing.Point(39, 9)
+        Me.Label6.MinimumSize = New System.Drawing.Size(0, 20)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(80, 16)
+        Me.Label6.Padding = New System.Windows.Forms.Padding(0, 2, 0, 0)
+        Me.Label6.Size = New System.Drawing.Size(83, 20)
         Me.Label6.TabIndex = 48
-        Me.Label6.Text = "MP Channel"
+        Me.Label6.Text = "MP Channel:"
         '
         'nmbMPChannel
         '
         Me.nmbMPChannel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nmbMPChannel.Location = New System.Drawing.Point(174, 20)
+        Me.nmbMPChannel.Location = New System.Drawing.Point(128, 9)
         Me.nmbMPChannel.Maximum = New Decimal(New Integer() {15, 0, 0, 0})
         Me.nmbMPChannel.Name = "nmbMPChannel"
         Me.nmbMPChannel.Size = New System.Drawing.Size(53, 22)
@@ -55,7 +57,7 @@ Partial Class Form1
         Me.chkDebugDrawing.AutoSize = True
         Me.chkDebugDrawing.BackColor = System.Drawing.Color.LightGray
         Me.chkDebugDrawing.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkDebugDrawing.Location = New System.Drawing.Point(81, 50)
+        Me.chkDebugDrawing.Location = New System.Drawing.Point(38, 37)
         Me.chkDebugDrawing.Name = "chkDebugDrawing"
         Me.chkDebugDrawing.Size = New System.Drawing.Size(113, 20)
         Me.chkDebugDrawing.TabIndex = 46
@@ -67,7 +69,7 @@ Partial Class Form1
         Me.Label1.AutoSize = True
         Me.Label1.BackColor = System.Drawing.Color.LightGray
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(186, 95)
+        Me.Label1.Location = New System.Drawing.Point(131, 78)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(137, 13)
         Me.Label1.TabIndex = 49
@@ -75,25 +77,25 @@ Partial Class Form1
         '
         'btnReconnect
         '
-        Me.btnReconnect.Location = New System.Drawing.Point(1, 85)
+        Me.btnReconnect.Location = New System.Drawing.Point(5, 68)
         Me.btnReconnect.Name = "btnReconnect"
         Me.btnReconnect.Size = New System.Drawing.Size(69, 23)
         Me.btnReconnect.TabIndex = 50
-        Me.btnReconnect.Text = "Reconnect"
+        Me.btnReconnect.Text = "Reattach"
         Me.btnReconnect.UseVisualStyleBackColor = True
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(325, 109)
+        Me.ClientSize = New System.Drawing.Size(269, 93)
         Me.Controls.Add(Me.btnReconnect)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.nmbMPChannel)
         Me.Controls.Add(Me.chkDebugDrawing)
         Me.Name = "Form1"
-        Me.Text = "Wulf's Dark Souls Connectivity Mod"
+        Me.Text = "Wulf's DSCM"
         CType(Me.nmbMPChannel, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
