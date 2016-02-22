@@ -1,0 +1,10 @@
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\bin\Release\DaS-PC-MPChan.exe.config
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\bin\Release\DaS-PC-MPChan.exe
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\bin\Release\DaS-PC-MPChan.pdb
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\bin\Release\DaS-PC-MPChan.xml
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS_PC_MPChan.Form1.resources
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS_PC_MPChan.Resources.resources
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS-PC-MPChan.vbproj.GenerateResource.Cache
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS-PC-MPChan.exe
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS-PC-MPChan.xml
+D:\Documents\Visual Studio 2010\Projects\DSCM\DaS-PC-MPChan\obj\Release\DaS-PC-MPChan.pdb
