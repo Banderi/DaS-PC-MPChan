@@ -215,43 +215,40 @@ void restoreNode(int node);
 void restoreAllNodes();
 
 HANDLE hProcess; // handle to the Dark Souls process
+DWORD processCode;
 DWORD lpBaseAddress; // process entry address
+DWORD lpNodesAddress; // nodes base address
 vector<byte> buffer;
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	//atexit(exiting);
+
 	hProcess = GetProcessByName("DARKSOULS.exe");
-	lpBaseAddress = dwGetModuleBaseAddress(FindProcessId("DARKSOULS.exe"), _T("DARKSOULS.exe"));	
+	lpBaseAddress = dwGetModuleBaseAddress(FindProcessId("DARKSOULS.exe"), _T("DARKSOULS.exe"));
+	lpNodesAddress = bufferToPointer(readMemory(hProcess, concatenatePointer(hProcess, { 0x2c, 0xc, 0x8, 0x18 }, lpBaseAddress + 0x00F62D34), 4));
 
 	prepareNodes();
-	
-	//writeMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, 0x114 }, lpBaseAddress + 0x00F63BB0), stringToBuffer("hello"));
-	//writeMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, 0x114 }, lpBaseAddress + 0x00F63BB0), readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, 0x114 }, lpBaseAddress + 0x00F63BB0), 16));
 
-	while (1)
+	while (GetExitCodeProcess(hProcess, &processCode) && processCode == STILL_ACTIVE)
 	{
+		cout << endl;
 		cout << " process base address: 0x";
 		printf("%08X", lpBaseAddress);
 		cout << endl;
 
 		cout << " nodes base address?: 0x";
-		printf("%08X\n", bufferToPointer(readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, 0x9c }, lpBaseAddress + 0x00F63BB0), 4)));
+		printf("%08X\n", lpNodesAddress);
 		cout << endl;
-		cout << " nodes: " << bufferToPointer(readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, 0x80 }, lpBaseAddress + 0x00F63BB0), 4)) << "/" << nodesCount << endl;
+		cout << " nodes: " << bufferToPointer(readMemory(hProcess, lpNodesAddress - 0x40, 4)) << "/" << nodesCount << endl;
 
 		readNodes();
-		renameAllNodes();
 		printNodes();
 		Sleep(1000);
 		cls();
-		//restoreAllNodes();
 	}
-
-	//cout << endl;
-	//cout << endl;
-	//system("pause");
-	//getchar();
+	
 	return 0;
 }
 
@@ -260,6 +257,7 @@ void prepareNodes()
 	for (int i = 0; i < nodesCount; i++)
 	{
 		nodes.push_back(nullNode);
+		nodes.at(i).m_nodeNumber = i;
 	}
 }
 
@@ -267,14 +265,30 @@ void readNodes()
 {
 	for (int i = 0; i < nodesCount; i++)
 	{
-		DWORD pointer = bufferToPointer(readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, DWORD(0x9c + i * 0xb0) }, lpBaseAddress + 0x00F63BB0), 4));
-		bool active = 0;
-		string id = bufferToString(readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, DWORD(0x114 + i * 0xb0) }, lpBaseAddress + 0x00F63BB0), 16));
-		if (id != "" && id != nodes.at(i).m_id64_old)
+		DWORD pointer = lpNodesAddress + DWORD(i * 0xb0); // node base pointer
+		string id = bufferToString(readMemory(hProcess, pointer + 0x54, 16)); // steamid64
+		string name = bufferToUnicode(readMemory(hProcess, concatenatePointer(hProcess, { 0x14, 0x30 }, pointer + 0x24), 64)); // steam name
+
+		nodes.at(i).m_baseAddress = pointer;
+
+		if (id.size() != 0 && id.at(0) != 0x00)
 		{
-			active = 1;
-			string name = bufferToUnicode(readMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, DWORD(0xe4 + i * 0xb0), 0x14, 0x30 }, lpBaseAddress + 0x00F63BB0), 64));
-			nodes.at(i) = node(active, pointer, i + 1, id, name);
+			nodes.at(i).m_active = 1;
+
+			if (nodes.at(i).m_name != name)
+			{				
+				nodes.at(i).m_id64 = id;
+				nodes.at(i).m_id64_old = id;
+				nodes.at(i).m_name = name;
+				renameNode(i);
+			}
+		}
+		else
+		{
+			nodes.at(i).m_active = 0;
+			nodes.at(i).m_id64 = "";
+			nodes.at(i).m_id64_old = "";
+			nodes.at(i).m_name = "";
 		}
 	}
 	
@@ -291,12 +305,11 @@ void printNodes()
 		printf(" (0x%08X): ", nodes.at(i).m_baseAddress);
 		if (nodes.at(i).m_active)
 		{
-			cout << nodes.at(i).m_id64_old;
-			cout << " - " << nodes.at(i).m_name;
+			cout << nodes.at(i).m_id64 << " (" << nodes.at(i).m_id64_old << ") - " << nodes.at(i).m_name;
 		}
 		else
 		{
-			cout << "n/a - n/a";
+			cout << "N/A";
 		}
 		
 		cout << endl;	
@@ -307,7 +320,7 @@ void renameNode(int node)
 {
 	string str = nodes.at(node).m_name;
 	str.resize((size_t)16, (char)' ');
-	writeMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, DWORD(0x114 + node * 0xb0) }, lpBaseAddress + 0x00F63BB0), stringToBuffer(str));
+	writeMemory(hProcess, nodes.at(node).m_baseAddress + 0x54, stringToBuffer(str));
 	nodes.at(node).m_id64 = str;
 }
 
@@ -322,7 +335,7 @@ void renameAllNodes()
 
 void restoreNode(int node)
 {
-	writeMemory(hProcess, concatenatePointer(hProcess, { 0xa0, 0x0, 0x8, 0x40, DWORD(0x114 + node * 0xb0) }, lpBaseAddress + 0x00F63BB0), stringToBuffer(nodes.at(node).m_id64_old));
+	writeMemory(hProcess, nodes.at(node).m_baseAddress + 0x54, stringToBuffer(nodes.at(node).m_id64_old));
 	nodes.at(node).m_id64 = nodes.at(node).m_id64_old;
 }
 
